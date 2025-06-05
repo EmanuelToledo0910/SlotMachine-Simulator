@@ -1,0 +1,525 @@
+body {
+    font-family: Arial, sans-serif;
+    background-image: url(imagenes/monedas3.jpg);
+    background-repeat: repeat ;
+    background-size: 800px 750px  ;    
+    color: white;
+    text-align: center;
+    padding: 10px;
+  }
+  
+  .slot-machine {
+    display: inline-block;
+    border: 4px solid #ffc107;
+    border-radius: 10px;
+    background-color: rgba(0, 0, 0,0.7);
+    padding: 100px;
+    height: 500px;
+    user-select: none;
+  }
+  
+  .reels {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 40px;
+  }
+
+
+  .column {
+  width: 100px;
+  height: 250px; /* 3 símbolos de 80px */
+  background-color: rgba(255,255,255, 0.7);
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+  position: relative;
+  } 
+
+  .reel-strip {
+  display: flex;
+  margin-top: -80px; /* muestra el símbolo "previo" al inicio */
+  flex-direction: column;
+  transition: transform 0.15s linear;
+  position: relative;
+  }
+  
+  .column .reel-cell {
+    height: 80px;
+    font-size: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+    position: relative;
+    transition: all 0.3s ease;
+    box-sizing: border-box; /* Importante: incluye bordes en el cálculo del tamaño */
+  }
+  
+  .reel-cell {
+  font-size: 40px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  }
+
+  /* Efectos visuales para celdas ganadoras */
+  .reel-cell.ganadora {
+    border: 2px solid #ffd700;
+  border-radius: 6px;
+    background: linear-gradient(45deg, rgba(255, 215, 0, 0.3), rgba(255, 255, 0, 0.3));
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
+  animation: brilloGanador 1.5s infinite alternate; /* Solo brillo, sin rotación */
+    z-index: 10;
+    transform: none; /* Forzar que no haya transformaciones */
+  }
+
+  .reel-cell.ganadora-diamante {
+    border: 2px solid #ff1493;
+    border-radius: 6px;
+    background: linear-gradient(45deg, rgba(255, 20, 147, 0.3), rgba(138, 43, 226, 0.3));
+    box-shadow: 0 0 12px rgba(255, 20, 147, 0.8);
+    animation: brilloDiamante 1s infinite alternate; /* Solo brillo, sin rotación */
+    z-index: 10;
+    transform: none; /* Forzar que no haya transformaciones */
+  }
+
+  /* Rotación SOLO para las imágenes dentro de celdas ganadoras */
+  .reel-cell.ganadora .simbolo-img {
+    animation: rotacionGanadora 8s linear infinite; /* Rotación continua e infinita */
+    filter: brightness(1.3) saturate(1.2);
+  }
+
+  .reel-cell.ganadora-diamante .simbolo-img {
+    animation: rotacionDiamante 6s linear infinite; /* Rotación más rápida para diamantes */
+    filter: brightness(1.3) saturate(1.2);
+  }
+
+  @keyframes brilloGanador {
+    0% {
+      box-shadow: 0 0 8px rgba(255, 215, 0, 0.7);
+    }
+    100% {
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.9);
+    }
+  }
+
+  @keyframes brilloDiamante {
+    0% {
+      box-shadow: 0 0 10px rgba(255, 20, 147, 0.8);
+    }
+    100% {
+      box-shadow: 0 0 18px rgba(255, 20, 147, 0.9);
+    }
+  }
+
+  /* Efecto adicional para cuando se activa la ganancia */
+  .reel-cell.ganadora-activa {
+    animation: pulsoGanador 0.6s ease-in-out;
+  }
+
+  @keyframes pulsoGanador {
+    0% {
+      opacity: 0.7;
+    }
+    50% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  /* Animación de rotación para simbolos ganadores */
+@keyframes rotacionGanadora {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Animación de rotación más rápida para diamantes */
+@keyframes rotacionDiamante {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+  .simbolo-img {
+  max-width: 95%;
+  max-height: 95%;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+  transition: all 0.3s ease;
+} 
+
+/* Efecto base en la imagen cuando la celda es ganadora - se sobrescribe con la animación */
+.reel-cell.ganadora .simbolo-img:not([style*="animation"]),
+.reel-cell.ganadora-diamante .simbolo-img:not([style*="animation"]) {
+  filter: brightness(1.3) saturate(1.2);
+  }
+
+  #spin-button {
+    padding: 10px 30px;
+    font-size: 18px;
+    border: none;
+    border-radius: 6px;
+    background-color: #ffc107;
+    color: #222;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  
+  
+  #spin-button:hover {
+    background-color: #e0a800;
+  }
+
+  /* Estilo para el contador de tiros gratis */
+.tiros-gratis {
+  background-color:rgba(224, 168, 0, 0.9);
+  color: black;
+  padding: 8px 15px;
+  border-radius: 20px;
+  font-weight: bold;
+  margin: 10px auto;
+  display: inline-block;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+  /* animación que desliza hacia arriba */
+@keyframes spin-down {
+    0% {
+      transform: translateY(0);
+    }
+    100% {
+      transform: translateY(80px);
+    }
+  }
+
+  .controls {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: 20px;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.saldo, .apuesta, .botones-extra {
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 10px 15px;
+  border-radius: 8px;
+}
+
+.saldo p {
+  margin: 0;
+  font-size: 18px;
+}
+
+#cargar-saldo,
+#tabla-ganancias,
+#toggle-sonido {
+  margin-top: 5px;
+  padding: 6px 12px;
+  border: none;
+  background-color: #ffc107;
+  color: #222;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Estilo específico para el icono dentro del botón de sonido */
+.icono-sonido {
+  width: 16px;
+  height: 16px;
+  stroke-width: 2;
+  pointer-events: none;
+  vertical-align: middle;
+  width: 14px; /* Reducido de 16px a 14px */
+  height: 14px; /* Reducido de 16px a 14px */
+}
+
+/* Asegurar que el botón de sonido mantenga su tamaño */
+#toggle-sonido {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px; /* Reducido de 32px a 24px */
+  min-height: 24px; /* Reducido de 32px a 24px */
+  padding: 4px; /* Padding más pequeño */
+}
+
+#tabla-ganancias:hover,
+#toggle-sonido:hover,
+#cargar-saldo:hover {
+  background-color: #e0a800;
+}
+.monto-apuesta {
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 10px 15px;
+  border-radius: 8px;
+}
+
+.monto-apuesta label {
+  margin-right: 8px;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: rgba(20, 20, 20, 0.95);
+  padding: 2rem;
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 0 25px rgba(255, 215, 0, 0.3);
+  color: #fff;
+  max-width: 350px;
+  margin: auto;
+}
+
+#modal-cargar-saldo input[type="number"] {
+  padding: 10px 15px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 215, 0, 0.5);
+  background: rgba(255, 215, 0, 0.1);
+  color: #fff;
+  width: 80%;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  text-align: center;
+  outline: none;
+  transition: border 0.3s, box-shadow 0.3s;
+}
+
+#modal-cargar-saldo input[type="number"]:focus {
+  border: 1px solid rgba(255, 215, 0, 0.9);
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
+/* Botones */
+#modal-cargar-saldo button {
+  background: rgba(255, 215, 0, 0.2);
+  border: 1px solid rgba(255, 215, 0, 0.4);
+  color: #fff;
+  padding: 10px 20px;
+  margin: 0 10px;
+  border-radius: 12px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s, box-shadow 0.3s;
+}
+
+#modal-cargar-saldo button:hover {
+  background: rgba(255, 215, 0, 0.4);
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
+.mensaje-centrado {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 20px 30px;
+  border-radius: 10px;
+  text-align: center;
+  z-index: 9999;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.mensaje-centrado#mensaje-error {
+  background-color: #ffcdd2;
+  color: #b71c1c;
+}
+
+.mensaje-centrado#mensaje-ganancias {
+  background-color: #c8e6c9;
+  color: #1b5e20;
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+.oculto {
+  display: none;
+}
+
+.boton-entendido {
+  margin-top: 15px;
+  padding: 10px 20px;
+  font-size: 18px;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.boton-entendido#mensaje-error {
+  background-color: #ffffff;
+  color: #d32f2f;
+}
+
+.boton-entendido.boton-ganancia {
+  background-color: #4caf50;
+  color: white;
+}
+
+.boton-entendido:hover {
+  filter: brightness(0.9);
+}
+
+.modal-premios {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-contenido {
+  background: black;
+  padding: 2rem;
+  width: 90%;
+  max-width: 600px;
+  max-height: 90vh;
+  border-radius: 20px;
+  overflow-y: auto;
+  position: relative;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.modal-contenido h2 {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.modal-contenido ul {
+  list-style: none;
+  padding: 0;
+}
+
+.modal-contenido ul li {
+  margin: 0.5rem 0;
+  font-size: 1.1rem;
+}
+
+.tabla-premios-scroll {
+  overflow-y: auto;
+  max-height: 70vh;
+  padding-right: 1rem;
+}
+
+.cerrar-modal {
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.hidden {
+  display: none;
+}
+
+.boton-entendido-tabla {
+  margin-top: 15px;
+  padding: 10px 20px;
+  font-size: 18px;
+  border: none;
+  border-radius: 8px;
+  background-color: #e0a800;
+  color: black;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.titulos-tabla-premios{
+  background-color: #e0a800;
+  border: 3px solid white;
+  color: black;
+  clip-path: inset(0px 200px 0px 200px);
+}
+
+.titulos-tabla-premios-diamante{
+  background-color: #e0a800;
+  border: 3px solid white;
+  color: black;
+  clip-path: inset(0px 90px 0px 90px);
+}
+
+.titulos-tabla-premios-lineas{
+  background-color: #e0a800;
+  border: 3px solid white;
+  color: black;
+  clip-path: inset(0px 90px 0px 90px);
+}
+
+select {
+  background-color: rgba(255, 215, 0, 0.5); /* dorado traslúcido */
+  border: 1px solid rgba(255, 215, 0, 0.8); /* borde dorado más fuerte */
+  border-radius: 12px;
+  padding: 8px 12px;
+  color: white;
+  font-weight: bold;
+  font-size: 1rem;
+  outline: none;
+  backdrop-filter: blur(3px); /* efecto de vidrio */
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+  transition: all 0.3s ease;
+  appearance: none; /* oculta flecha nativa en algunos navegadores */
+  cursor: pointer;
+}
+
+select:hover {
+  color: black;
+  background-color: rgba(255, 215, 0, 0.35);
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+}
+
+.bloqueado {
+  opacity: 0.6;
+  pointer-events: none;
+}

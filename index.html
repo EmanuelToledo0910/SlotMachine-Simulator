@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tragamonedas</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body>
+  <div class="slot-machine">
+    <h1>Tragamonedas MYS</h1>
+    <div class="reels" id="reels">
+      <!-- Las celdas se generan con JavaScript -->
+    </div>
+    <div><button id="spin-button">Girar</button></div>
+
+    <div id="tiros-gratis-container" class="tiros-gratis oculto">
+      <span>Tiros gratis: <span id="tiros-gratis-contador">0</span></span>
+    </div>
+
+    <div class="controls">
+      <div class="saldo">
+        <span id="saldo-actual">Saldo: $0</span>
+        <div>
+          <button onclick="abrirModalSaldo()" id="cargar-saldo">Cargar saldo</button>
+        </div>
+      </div>
+
+      <div class="monto-apuesta">
+        <label for="monto-apuesta">Apuesta por línea:</label>
+        <div>
+          <select id="monto-apuesta">
+            <option value="250">$250</option>
+            <option value="500">$500</option>
+            <option value="1000">$1000</option>
+            <option value="2000">$2000</option>
+            <option value="5000">$5000</option>
+            <option value="10000">$10000</option>
+          </select>
+        </div>
+      </div>
+
+
+      <div class="apuesta">
+        <label for="lineas-apuesta">Apostar a:</label>
+        <div>
+          <select id="lineas-apuesta">
+          <option value="1">1 línea</option>
+          <option value="2">3 líneas</option>
+          <option value="3">5 líneas</option>
+        </select></div>
+      </div>
+
+      <div class="botones-extra">
+        <div id="tablaPremiosModal" class="modal-premios hidden">
+          <div class="modal-contenido">
+            <button class="cerrar-modal" onclick="cerrarTablaPremios()">✖</button>
+            <h2>🎰 Tabla de Combinaciones Ganadoras</h2>
+            <p>Las siguientes combinaciones aplican según la cantidad de líneas apostadas y los símbolos consecutivos.</p>
+
+            <div class="tabla-premios-scroll">
+              <h3 class="titulos-tabla-premios">FRUTAS COMUNES</h3>
+              <ul>
+                <li>🍒🍒🍒 → x2</li>
+                <li>🍒🍒🍒🍒 → x5</li>
+                <li>🍒🍒🍒🍒🍒 → x10</li>
+                <li>🍌🍌🍌 → x2</li>
+                <li>🍌🍌🍌🍌 → x5</li>
+                <li>🍌🍌🍌🍌🍌 → x10</li>
+                <li>🥝🥝🥝 → x2</li>
+                <li>🥝🥝🥝🥝 → x5</li>
+                <li>🥝🥝🥝🥝🥝 → x10</li>
+                <li>🍋🍋🍋 → x2</li>
+                <li>🍋🍋🍋🍋 → x5</li>
+                <li>🍋🍋🍋🍋🍋 → x10</li>
+                <li>🍎🍎🍎 → x2</li>
+                <li>🍎🍎🍎🍎 → x5</li>
+                <li>🍎🍎🍎🍎🍎 → x10</li>
+                <li>🍊🍊🍊 → x2</li>
+                <li>🍊🍊🍊🍊 → x5</li>
+                <li>🍊🍊🍊🍊🍊 → x10</li>
+              </ul>
+
+              <h3 class="titulos-tabla-premios">FRUTAS RARAS</h3>
+              <ul>
+                <li>🍉🍉🍉 → x4</li>
+                <li>🍉🍉🍉🍉 → x8</li>
+                <li>🍉🍉🍉🍉🍉 → x16</li>
+                <li>🍇🍇🍇 → x4</li>
+                <li>🍇🍇🍇🍇 → x8</li>
+                <li>🍇🍇🍇🍇🍇 → x16</li>
+              </ul>
+
+              <h3 class="titulos-tabla-premios">COMODINES</h3>
+              <ul>
+                <li>Los comodines reemplazan cualquier símbolo para ayudarte a completar una combinación ganadora.</li>
+                <li>❌ No generan premios por sí mismos.</li>
+                <li>🔀 Pueden estar en cualquier posición de una combinación (inicio, medio o final).</li>
+              </ul>
+
+              <h3 class="titulos-tabla-premios-diamante">💎 DIAMANTES (bonificación especial)</h3>
+              <ul>
+                <li>💎 x3 (en cualquier lugar) → 5 tiros gratis</li>
+                <li>💎 x4 → 10 tiros gratis</li>
+                <li>💎 x5 → 15 tiros gratis</li>
+                <li>💎 x6 o más → 20 tiros gratis</li>
+              </ul>
+
+              <h3 class="titulos-tabla-premios-lineas">📏 LINEAS GANADORAS SEGUN APUESTAS</h3>
+              <ul>
+                <li>🎯 1 línea: solo la línea central (combinaciones horizontales)</li>
+                <li>🎯 3 líneas: línea central, superior e inferior</li>
+                <li>🎯 5 líneas: líneas central, superior e inferior + combinaciones verticales y diagonales</li>
+                <li>🔁 Las combinaciones deben ser consecutivas y pueden incluir comodines para completarlas.</li>
+              </ul>
+
+              <button onclick="cerrarTablaPremios()" class="boton-entendido-tabla">¡Entendido!</button>
+            </div>
+          </div>
+        </div>
+        <button onclick="mostrarTablaPremios()" id="tabla-ganancias">Tabla de premios</button>
+        <button id="toggle-sonido"><i data-lucide="volume-2" class="icono-sonido"></i></button>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-cargar-saldo" class="modal" style="display: none;">
+    <div class="modal-content">
+      <h3>¿Cuánto querés agregar?</h3>
+      <input type="number" id="monto-a-agregar" min="1" />
+      <button onclick="agregarSaldo()">Agregar</button>
+      <button onclick="cerrarModalSaldo()">Cancelar</button>
+    </div>
+  </div>
+
+  <div id="mensaje-error" class="mensaje-centrado oculto">
+    <p id="texto-error"></p>
+    <button onclick="cerrarMensajeError()" class="boton-entendido">¡Entendido!</button>
+  </div>
+
+  <div id="mensaje-ganancias" class="mensaje-centrado mensaje-ganancia oculto">
+    <p id="texto-ganancias"></p>
+    <button onclick="cerrarMensajeGanancia()" class="boton-entendido boton-ganancia">¡Genial!</button>
+  </div>
+
+
+  <script src="script.js"></script>
+  <script>
+    // Inicializar los iconos de Lucide
+    lucide.createIcons();
+  </script>
+</body>
+</html>
