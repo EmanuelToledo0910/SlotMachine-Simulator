@@ -3,7 +3,7 @@ const symbols = [
   { nombre: "banana", src: "logos/banana.png", tope: 0.24, tipo: "basica" },
   { nombre: "kiwi", src: "logos/kiwi.png", tope: 0.36, tipo: "basica" },
   { nombre: "limon", src: "logos/limon.png", tope: 0.48, tipo: "basica" },
-  { nombre: "manzana", src: "/logos/manzana.png", tope: 0.6, tipo: "basica" },
+  { nombre: "manzana", src: "logos/manzana.png", tope: 0.6, tipo: "basica" },
   { nombre: "naranja", src: "logos/naranja.png", tope: 0.72, tipo: "basica" },
   { nombre: "sandia", src: "logos/sandia.png", tope: 0.8, tipo: "rara" },
   { nombre: "uva", src: "logos/uva.png", tope: 0.88, tipo: "rara" },
